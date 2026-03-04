@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📝 Резюме страницы — AI Agent</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            color: #e0e0e0;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 720px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]::placeholder {
+            color: #888;
+        }
+
+        input[type="text"]:focus {
+            border-color: #7c6fe0;
+        }
+
+        button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 14px;
+            padding: 24px;
+            margin-top: 10px;
+            line-height: 1.7;
+        }
+
+        .result-box h2 {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            color: #a8b4ff;
+        }
+
+        .result-box p {
+            color: #ddd;
+            font-size: 0.98em;
+        }
+
+        .result-url {
+            font-size: 0.85em;
+            color: #888;
+            word-break: break-all;
+            margin-bottom: 14px;
+        }
+
+        .error-box {
+            background: rgba(234, 102, 102, 0.1);
+            border: 1px solid rgba(234, 102, 102, 0.3);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 10px;
+            color: #ff8a8a;
+        }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            color: #aaa;
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top: 3px solid #7c6fe0;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.8em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Резюме страницы</h1>
+        <p class="subtitle">Вставьте ссылку — агент прочитает страницу и сделает краткое резюме</p>
+
+        <form method="POST" id="summaryForm">
+            <input
+                type="text"
+                name="url"
+                placeholder="https://example.com/article"
+                value="{{ url or '' }}"
+                required
+            >
+            <button type="submit" id="submitBtn">Резюмировать</button>
+        </form>
+
+        <div class="loader" id="loader">
+            <span class="spinner"></span> Загружаю страницу и генерирую резюме…
+        </div>
+
+        {% if error %}
+        <div class="error-box">
+            ⚠️ {{ error }}
+        </div>
+        {% endif %}
+
+        {% if summary %}
+        <div class="result-box">
+            <h2>📋 Результат</h2>
+            <div class="result-url">🔗 {{ url }}</div>
+            <p>{{ summary }}</p>
+        </div>
+        {% endif %}
+
+        <div class="footer">
+            AI Page Summarizer Agent &middot; GPT-4o via Polza.ai
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('summaryForm').addEventListener('submit', function() {
+            document.getElementById('loader').classList.add('active');
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').textContent = 'Обработка…';
+        });
+    </script>
+</body>
+</html>
